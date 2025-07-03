@@ -1,8 +1,7 @@
-// import { Login } from './pages/auth/login'
-import { Register } from './pages/auth/register'
+import { Routes } from './routes'
 
 function App() {
-  return <Register />
+  return <Routes />
 }
 
 export default App

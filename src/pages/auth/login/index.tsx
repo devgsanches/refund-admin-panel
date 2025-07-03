@@ -12,7 +12,7 @@ export type LoginForm = {
   password: string
 }
 
-export function Login() {
+export function SignIn() {
   const schema = z.object({
     email: z.string().email(),
     password: z.string().min(8),

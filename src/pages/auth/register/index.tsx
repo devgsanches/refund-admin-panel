@@ -14,7 +14,7 @@ export type RegisterForm = {
   confirmPassword: string
 }
 
-export function Register() {
+export function SignUp() {
   const schema = z
     .object({
       name: z.string().min(3),
@@ -22,7 +22,7 @@ export function Register() {
       password: z.string().min(8),
       confirmPassword: z.string(),
     })
-    .refine(data => data.password === data.confirmPassword, {
+    .refine((data) => data.password === data.confirmPassword, {
       message: 'As senhas não coincidem.',
       path: ['confirmPassword'],
     })
