@@ -6,6 +6,7 @@ import { Button } from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from 'react-router'
 
 export type RegisterForm = {
   name: string
@@ -96,9 +97,12 @@ export function Register() {
           >
             Cadastrar
           </Button>
-          <Button className="text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2]">
+          <Link
+            to={'/auth/login'}
+            className="w-full rounded-lg cursor-pointer py-3.5 text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2] text-center"
+          >
             Já tenho uma conta
-          </Button>
+          </Link>
         </Form>
       </Container>
     </div>
