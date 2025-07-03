@@ -6,6 +6,7 @@ import { Button } from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from 'react-router'
 
 export type LoginForm = {
   email: string
@@ -62,9 +63,12 @@ export function SignIn() {
           <Button className="bg-[#1F8459] transition-all duration-300 hover:bg-[#1F8459]/90 text-[#FFF]">
             Entrar
           </Button>
-          <Button className="text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2]">
+          <Link
+            to={'/auth/register'}
+            className="w-full rounded-lg cursor-pointer py-3.5 text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2] text-center"
+          >
             Criar conta
-          </Button>
+          </Link>
         </Form>
       </Container>
     </div>
