@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+:root {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
