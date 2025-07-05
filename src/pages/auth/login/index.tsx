@@ -64,7 +64,7 @@ export function SignIn() {
             Entrar
           </Button>
           <Link
-            to={'/auth/signup'}
+            to={'/auth/register'}
             className="w-full rounded-lg cursor-pointer py-3.5 text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2] text-center"
           >
             Criar conta

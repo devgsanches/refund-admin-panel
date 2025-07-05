@@ -98,7 +98,7 @@ export function SignUp() {
             Cadastrar
           </Button>
           <Link
-            to={'/auth/signin'}
+            to={'/auth/login'}
             className="w-full rounded-lg cursor-pointer py-3.5 text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2] text-center"
           >
             Já tenho uma conta

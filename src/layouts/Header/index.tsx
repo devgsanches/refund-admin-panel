@@ -1,6 +1,6 @@
 import logo from '@/assets/logo.svg'
 import signOutIcon from '@/assets/icons/signOut.svg'
-import { Outlet } from 'react-router'
+import { Outlet } from 'react-router-dom'
 
 export function Header({
   user,

@@ -42,8 +42,11 @@ export function Pagination({
   return (
     <div className="flex items-center gap-2.5">
       <button
-        className={`cursor-pointer hover:bg-[#1f8459] rounded-full p-1 transition-all duration-300`}
+        className={`flex items-center justify-center cursor-pointer bg-[#1f8459] rounded-lg p-1 w-8 h-8 ${
+          currentPage === 1 ? 'opacity-50' : ''
+        }`}
         onClick={() => handlePreviousPage('previous')}
+        disabled={currentPage === 1}
       >
         <img src={previousButton} alt="Botão de voltar" />
       </button>
@@ -51,8 +54,11 @@ export function Pagination({
         <span>{currentPage}</span>/{total}
       </p>
       <button
-        className={`cursor-pointer hover:bg-[#1f8459] rounded-full p-1 transition-all duration-300`}
+        className={`flex items-center justify-center cursor-pointer bg-[#1f8459] rounded-lg p-1 w-8 h-8 ${
+          currentPage === total ? 'opacity-50' : ''
+        }`}
         onClick={() => handlePreviousPage('next')}
+        disabled={currentPage === total}
       >
         <img src={nextButton} alt="Botão de avançar" />
       </button>

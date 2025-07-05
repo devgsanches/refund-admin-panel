@@ -4,10 +4,13 @@ import { Refund } from '@/components/Refund'
 import { Search } from '@/components/Search'
 import { db } from '@/utils/db'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 export function Dashboard() {
   const [search, setSearch] = useState<string>('')
   const [limitReached, setLimitReached] = useState(false)
+
+  const navigate = useNavigate()
 
   const totalPages = 10
 
@@ -15,7 +18,7 @@ export function Dashboard() {
   const perPage = 6
 
   const dbFiltered = search
-    ? db.filter(refund =>
+    ? db.filter((refund) =>
         refund.name.toLowerCase().includes(search.toLowerCase())
       )
     : db.slice(0, perPage)
@@ -26,18 +29,25 @@ export function Dashboard() {
         <h1 className="font-bold text-xl">Solicitações</h1>
         <Search search={search} setSearch={setSearch} />
         <ul className="flex flex-col gap-4">
-          {dbFiltered.map(refund => {
+          {dbFiltered.map((refund) => {
             return (
               <Refund
                 amount={refund.amount}
                 name={refund.name}
                 key={refund.id}
                 category={refund.category}
+                onClick={() => {
+                  navigate(`/dashboard/${refund.id}/details`, {
+                    state: {
+                      fromDetails: true,
+                    },
+                  })
+                }}
               />
             )
           })}
         </ul>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           {totalPages > 1 ? (
             <Pagination
               current={1}

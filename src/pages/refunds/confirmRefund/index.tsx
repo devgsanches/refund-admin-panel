@@ -2,8 +2,16 @@ import { Container } from '@/components/Container'
 
 import checkIcon from '@/assets/icons/check.svg'
 import { Button } from '@/components/Button'
+import { Navigate, useLocation, useNavigate } from 'react-router'
 
-export function ConfirmRefund() {
+export function ConfirmedRefund() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  if (!location.state?.fromSubmit) {
+    return <Navigate to="/refunds/new" />
+  }
+
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-110px)] flex  justify-center pt-6.5">
       <Container className="max-h-[24.25rem]">
@@ -17,7 +25,10 @@ export function ConfirmRefund() {
             o setor financeiro irá entrar em contato com você.
           </p>
         </div>
-        <Button className="bg-[#1F8459] text-white mt-10 transition-all duration-300 hover:bg-[#1F8459]/90">
+        <Button
+          className="bg-[#1F8459] text-white mt-10 transition-all duration-300 hover:bg-[#1F8459]/90"
+          onClick={() => navigate('/refunds/new')}
+        >
           Nova solicitação
         </Button>
       </Container>
