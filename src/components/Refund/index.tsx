@@ -23,27 +23,27 @@ export function Refund({
 
   function getCategoryInfo(category: string): CategoryInfo | undefined {
     switch (category) {
-      case 'Alimentação':
+      case 'food':
         return {
           img: <img src={foodIcon} alt="Alimentação" />,
           name: 'Alimentação',
         }
-      case 'Hospedagem':
+      case 'accommodation':
         return {
           img: <img src={hostingIcon} alt="Hospedagem" />,
           name: 'Hospedagem',
         }
-      case 'Transporte':
+      case 'transport':
         return {
           img: <img src={transportIcon} alt="Transporte" />,
           name: 'Transporte',
         }
-      case 'Serviços':
+      case 'services':
         return {
           img: <img src={servicesIcon} alt="Serviços" />,
           name: 'Serviços',
         }
-      case 'Outros':
+      case 'others':
         return {
           img: <img src={othersIcon} alt="Outros" />,
           name: 'Outros',

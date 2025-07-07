@@ -2,24 +2,12 @@ import { BrowserRouter, Navigate } from 'react-router'
 import { AuthRoutes } from './auth'
 import { EmployeeRoutes } from './employee'
 import { ManagerRoutes } from './manager'
-import { Loading } from '@/components/Loading'
-
-const useAuth = () => {
-  return {
-    user: { role: 'employee' },
-    isAuthenticated: true,
-    isLoading: false,
-  }
-}
 
 export default function Routes() {
-  const { user, isAuthenticated, isLoading } = useAuth()
+  const user = JSON.parse(localStorage.getItem('@user') || '{}')
+  const token = localStorage.getItem('@token')
 
-  if (isLoading) {
-    return <Loading />
-  }
-
-  if (!isAuthenticated) {
+  if (!token || !user) {
     return (
       <BrowserRouter>
         <AuthRoutes />

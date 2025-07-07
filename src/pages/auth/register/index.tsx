@@ -6,7 +6,9 @@ import { Button } from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { api } from '@/services/api'
+import { useState } from 'react'
 
 export type RegisterForm = {
   name: string
@@ -16,17 +18,27 @@ export type RegisterForm = {
 }
 
 export function SignUp() {
+  const [sucess, setSucess] = useState<boolean>(false)
+
   const schema = z
     .object({
-      name: z.string().min(3),
-      email: z.string().email(),
-      password: z.string().min(8),
+      name: z.string().trim().min(3, {
+        message: 'Nome deve conter pelo menos 3 caracteres.',
+      }),
+      email: z.string().email({
+        message: 'E-mail inválido.',
+      }),
+      password: z.string().min(6, {
+        message: 'Senha deve conter pelo menos 6 caracteres.',
+      }),
       confirmPassword: z.string(),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine(data => data.password === data.confirmPassword, {
       message: 'As senhas não coincidem.',
       path: ['confirmPassword'],
     })
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -36,8 +48,27 @@ export function SignUp() {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data: RegisterForm) => {
-    console.log(data)
+  const onSubmit = async (data: RegisterForm) => {
+    const user = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    }
+
+    const response = await api.post('users', user, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.status !== 201) {
+      return
+    }
+
+    setSucess(true)
+    setTimeout(() => {
+      navigate('/auth/login')
+    }, 1500)
   }
 
   return (
@@ -53,7 +84,9 @@ export function SignUp() {
             className="w-[24.875rem]"
           />
           {errors.name && (
-            <p className="text-red-500 text-xs font-semibold">Nome inválido.</p>
+            <p className="text-red-500 text-xs font-semibold">
+              {errors.name.message}
+            </p>
           )}
           <Input
             label="E-MAIL"
@@ -64,7 +97,7 @@ export function SignUp() {
           />
           {errors.email && (
             <p className="text-red-500 text-xs font-semibold">
-              E-mail inválido.
+              {errors.email.message}
             </p>
           )}
           <Input
@@ -76,7 +109,7 @@ export function SignUp() {
           />
           {errors.password && (
             <p className="text-red-500 text-xs font-semibold">
-              Senha inválida.
+              {errors.password.message}
             </p>
           )}
           <Input
@@ -88,7 +121,7 @@ export function SignUp() {
           />
           {errors.confirmPassword && (
             <p className="text-red-500 text-xs font-semibold">
-              As senhas não coincidem.
+              {errors.confirmPassword.message}
             </p>
           )}
           <Button
@@ -97,6 +130,11 @@ export function SignUp() {
           >
             Cadastrar
           </Button>
+          {sucess && (
+            <p className="text-green-500 text-xs font-semibold text-center">
+              Cadastro realizado com sucesso!
+            </p>
+          )}
           <Link
             to={'/auth/login'}
             className="w-full rounded-lg cursor-pointer py-3.5 text-[#1F2523] text-sm font-semibold border-2 border-transparent transition-all duration-300 hover:border-[#CDD5D2] text-center"

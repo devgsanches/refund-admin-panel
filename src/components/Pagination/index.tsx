@@ -1,64 +1,39 @@
 import previousButton from '@/assets/icons/previousButton.svg'
 import nextButton from '@/assets/icons/nextButton.svg'
-import { useState } from 'react'
 
 interface PaginationProps {
   current: number
   total: number
-  setLimitReached: (limitReached: boolean) => void
+  onPageChange: (page: number) => void
 }
 
-export function Pagination({
-  current,
-  total,
-  setLimitReached,
-}: PaginationProps) {
-  const [currentPage, setCurrentPage] = useState(current)
-
-  const handlePreviousPage = (action: 'previous' | 'next') => {
-    switch (action) {
-      case 'previous':
-        if (currentPage > 1) {
-          setCurrentPage(currentPage - 1)
-          setLimitReached(false)
-        } else {
-          return currentPage
-        }
-        break
-
-      case 'next':
-        if (currentPage < total) {
-          setCurrentPage(currentPage + 1)
-        } else {
-          setLimitReached(true)
-        }
-        break
-
-      default:
-        return currentPage
+export function Pagination({ current, total, onPageChange }: PaginationProps) {
+  const handlePageChange = (action: 'previous' | 'next') => {
+    if (action === 'previous' && current > 1) {
+      onPageChange(current - 1)
+    } else if (action === 'next' && current < total) {
+      onPageChange(current + 1)
     }
   }
 
   return (
     <div className="flex items-center gap-2.5">
       <button
-        className={`flex items-center justify-center cursor-pointer bg-[#1f8459] rounded-lg p-1 w-8 h-8 ${
-          currentPage === 1 ? 'opacity-50' : ''
-        }`}
-        onClick={() => handlePreviousPage('previous')}
-        disabled={currentPage === 1}
+        type="button"
+        className="cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed bg-[#1F8459] w-8 h-8 rounded-lg flex items-center justify-center"
+        onClick={() => handlePageChange('previous')}
+        disabled={current <= 1}
       >
         <img src={previousButton} alt="Botão de voltar" />
       </button>
       <p className="text-[#4D5C57] text-sm font-medium">
-        <span>{currentPage}</span>/{total}
+        <span>{current}</span>/{total}
       </p>
       <button
-        className={`flex items-center justify-center cursor-pointer bg-[#1f8459] rounded-lg p-1 w-8 h-8 ${
-          currentPage === total ? 'opacity-50' : ''
-        }`}
-        onClick={() => handlePreviousPage('next')}
-        disabled={currentPage === total}
+        type="button"
+        className="cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed bg-[#1F8459] w-8 h-8 rounded-lg flex items-center justify-center"
+        onClick={() => handlePageChange('next')}
+        disabled={current >= total}
       >
         <img src={nextButton} alt="Botão de avançar" />
       </button>

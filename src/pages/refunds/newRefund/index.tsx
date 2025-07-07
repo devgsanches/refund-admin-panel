@@ -12,11 +12,20 @@ import uploadIcon from '@/assets/icons/UPLOAD.svg'
 import { Button } from '@/components/Button'
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: 'Nome é obrigatório' }),
-  category: z.string().min(1, { message: 'Categoria é obrigatória' }),
-  value: z.string().min(1, { message: 'Valor é obrigatório' }),
+  name: z
+    .string()
+    .min(3, { message: 'Nome deve conter pelo menos 3 caracteres.' }),
+  category: z.string().min(1, { message: 'Categoria é obrigatória.' }),
+  value: z.coerce
+    .number({
+      message: 'Valor deve ser um número.',
+    })
+    .positive({
+      message: 'Valor deve ser positivo.',
+    })
+    .min(1, { message: 'Valor é obrigatório.' }),
   file: z.instanceof(File, {
-    message: 'Arquivo é obrigatório',
+    message: 'Arquivo é obrigatório.',
   }),
 })
 
@@ -27,6 +36,7 @@ export function NewRefund() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,8 +53,14 @@ export function NewRefund() {
   }
 
   return (
-    <div className="bg-[#E4ECE9] h-[calc(100vh-110px)] flex  justify-center pt-6.5">
-      <Container className="max-h-[31.5rem]">
+    <div className="bg-[#E4ECE9] h-screen sm:h-[calc(100vh-7.3125rem)] flex justify-center pt-8.5">
+      <Container
+        className={`${
+          errors.category || errors.file || errors.value || errors.name
+            ? 'max-h-[35rem]'
+            : 'max-h-[31.5rem]'
+        }`}
+      >
         <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-[#1F2523] text-xl font-bold">
             Solicitação de reembolso
@@ -108,18 +124,11 @@ export function NewRefund() {
               <input
                 type="file"
                 accept="image/*,.pdf,.doc,.docx"
-                onChange={(e) => {
+                onChange={e => {
                   const file = e.target.files?.[0]
                   if (file) {
                     setSelectedFileName(file.name)
-
-                    const event = {
-                      target: {
-                        name: 'file',
-                        value: file,
-                      },
-                    } as any
-                    register('file').onChange(event)
+                    setValue('file', file)
                   }
                 }}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"

@@ -3,28 +3,70 @@ import { Container } from '@/components/Container'
 import { Form } from '@/components/Form'
 import { Input } from '@/components/Input'
 import { Select } from '@/components/Select'
-import { db } from '@/utils/db'
 
 import fileIcon from '@/assets/icons/file.svg'
 import { Navigate, useLocation, useParams, useNavigate } from 'react-router'
+import { api } from '@/services/api'
+import { useEffect, useState } from 'react'
+import type { IRefund } from '@/interfaces/refund'
 
 export function RefundDetails() {
   const location = useLocation()
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const refund = db.find((refund) => refund.id === Number(id))
+  const [refund, setRefund] = useState<IRefund>({
+    id: '',
+    name: '',
+    amount: '0',
+    category: '',
+    createdAt: '',
+    updatedAt: '',
+    filePath: '',
+    user: {
+      name: '',
+    },
+    userId: '',
+  })
 
-  if (!refund) {
-    return <Navigate to="/dashboard" />
-  }
+  const token = localStorage.getItem('@token')
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = await api.get('/refunds', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const { refunds } = db.data
+      const foundRefund = refunds.find((refund: IRefund) => refund.id === id)
+
+      if (foundRefund) {
+        setRefund(foundRefund)
+      }
+    }
+
+    fetchData()
+  }, [id, token])
 
   if (!location.state?.fromDetails) {
     return <Navigate to="/dashboard" />
   }
 
+  const categoryTranslate =
+    refund?.category === 'transport'
+      ? 'Transporte'
+      : refund?.category === 'accommodation'
+      ? 'Hospedagem'
+      : refund?.category === 'services'
+      ? 'Serviços'
+      : refund?.category === 'food'
+      ? 'Alimentação'
+      : 'Outros'
+
   return (
-    <div className="bg-[#E4ECE9] h-[calc(100vh-110px)] flex  justify-center pt-6.5">
+    <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex  justify-center pt-6.5">
       <Container className="max-h-[30.125rem]">
         <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-[#1F2523] text-xl font-bold">
@@ -42,7 +84,7 @@ export function RefundDetails() {
             id="name"
             className="w-[27rem]"
             disabled
-            value={refund.name}
+            value={refund?.name}
           />
           <div className="flex items-center gap-4">
             <Select
@@ -55,7 +97,7 @@ export function RefundDetails() {
                 'Outros',
               ]}
               disabled
-              value={refund.category}
+              value={categoryTranslate}
             />
             <Input
               label="Valor"
@@ -64,7 +106,7 @@ export function RefundDetails() {
               className="w-[9.625rem] px-4"
               placeholder="0,00"
               disabled
-              value={refund.amount}
+              value={Number(refund?.amount).toFixed(2)}
             />
           </div>
 
