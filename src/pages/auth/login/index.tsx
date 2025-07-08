@@ -6,10 +6,11 @@ import { Button } from '@/components/Button'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '@/services/api'
 import { useState } from 'react'
 import { Loading } from '@/components/Loading'
+import { useAuth } from '@/hooks/useAuth'
 
 export type LoginForm = {
   email: string
@@ -20,12 +21,14 @@ export function SignIn() {
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
+  const navigate = useNavigate()
+
   const schema = z.object({
     email: z.string().email(),
     password: z.string(),
   })
 
-  const navigate = useNavigate()
+  const { save } = useAuth()
 
   const {
     register,
@@ -45,25 +48,18 @@ export function SignIn() {
           },
         })
 
-        const { token, user } = response.data
-
-        localStorage.setItem('@token', token)
-        localStorage.setItem('@user', JSON.stringify(user))
-
-        if (user.role === 'employee') {
+        save(response.data)
+        if (response.data.user.role === 'manager') {
+          navigate('/dashboard')
+        } else if (response.data.user.role === 'employee') {
           navigate('/refunds/new')
         }
-
-        if (user.role === 'manager') {
-          navigate('/dashboard')
-        }
-        location.reload()
       } catch {
         setError(true)
       } finally {
         setLoading(false)
       }
-    }, 500)
+    }, 250)
   }
 
   return (

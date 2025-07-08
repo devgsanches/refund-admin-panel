@@ -1,14 +1,19 @@
-import { Routes, Route } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import { ConfirmedRefund } from '@/pages/refunds/confirmRefund'
 import { NewRefund } from '@/pages/refunds/newRefund'
 import { NotFound } from '@/pages/notFound'
 import { Header } from '@/layouts/Header'
+import { useAuth } from '@/hooks/useAuth'
 
 export function EmployeeRoutes() {
-  const user = JSON.parse(localStorage.getItem('@user') || '{}')
+  const { session } = useAuth()
 
-  const name = user.name.split(' ')[0]
-  const role = user.role
+  if (!session) {
+    return <Navigate to="/auth/login" />
+  }
+
+  const name = session?.user?.name.split(' ')[0]
+  const role = session?.user?.role
 
   return (
     <Routes>

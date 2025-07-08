@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from 'react-router'
 import hiIcon from '@/assets/icons/hi.svg'
 import { useState } from 'react'
 import { Loading } from '@/components/Loading'
+import { useAuth } from '@/hooks/useAuth'
 
 export function Header({
   user,
@@ -16,15 +17,13 @@ export function Header({
 }) {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { signOut } = useAuth()
 
-  function signOut() {
+  function handleSignOut() {
     setLoading(true)
-    setTimeout(() => {
-      localStorage.removeItem('@token')
-      navigate('/auth/login')
-      location.reload()
-      setLoading(false)
-    }, 500)
+    signOut()
+    navigate('/auth/login')
+    setLoading(false)
   }
 
   return (
@@ -52,7 +51,7 @@ export function Header({
                 </span>
               </div>
 
-              <button className="cursor-pointer" onClick={signOut}>
+              <button className="cursor-pointer" onClick={handleSignOut}>
                 <img src={signOutIcon} alt="Sign Out" />
               </button>
             </div>

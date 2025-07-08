@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router'
 
 import uploadIcon from '@/assets/icons/UPLOAD.svg'
 import { Button } from '@/components/Button'
+import { useAuth } from '@/hooks/useAuth'
 
 const formSchema = z.object({
   name: z
@@ -32,6 +33,9 @@ const formSchema = z.object({
 export function NewRefund() {
   const [selectedFileName, setSelectedFileName] = useState<string>('')
   const navigate = useNavigate()
+
+  const data = useAuth()
+  console.log(data)
 
   const {
     register,
@@ -124,7 +128,7 @@ export function NewRefund() {
               <input
                 type="file"
                 accept="image/*,.pdf,.doc,.docx"
-                onChange={e => {
+                onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (file) {
                     setSelectedFileName(file.name)

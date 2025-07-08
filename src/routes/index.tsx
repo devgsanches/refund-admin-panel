@@ -1,28 +1,25 @@
-import { BrowserRouter, Navigate } from 'react-router'
 import { AuthRoutes } from './auth'
 import { EmployeeRoutes } from './employee'
 import { ManagerRoutes } from './manager'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function Routes() {
-  const user = JSON.parse(localStorage.getItem('@user') || '{}')
-  const token = localStorage.getItem('@token')
+  const { session } = useAuth()
 
-  if (!token || !user) {
-    return (
-      <BrowserRouter>
-        <AuthRoutes />
-      </BrowserRouter>
-    )
+  function Route() {
+    switch (session?.user?.role) {
+      case 'employee':
+        return <EmployeeRoutes />
+      case 'manager':
+        return <ManagerRoutes />
+      default:
+        return <AuthRoutes />
+    }
   }
 
-  const route =
-    user.role === 'manager' ? (
-      <ManagerRoutes />
-    ) : user.role === 'employee' ? (
-      <EmployeeRoutes />
-    ) : (
-      <Navigate to="/auth/login" />
-    )
+  if (!session) {
+    return <AuthRoutes />
+  }
 
-  return <BrowserRouter>{route}</BrowserRouter>
+  return <Route />
 }
