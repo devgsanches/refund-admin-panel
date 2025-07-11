@@ -169,7 +169,7 @@ export function NewRefund() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <div className="relative w-[27rem] flex flex-col gap-2">
+            <div className="relative sm:w-[27rem] w-[20.5rem] flex flex-col gap-2">
               <label className="text-[#4D5C57] text-xs">COMPROVANTE</label>
               <input
                 type="file"
@@ -202,7 +202,7 @@ export function NewRefund() {
           <Button
             className={`w-full bg-[#1F8459] text-white ${
               loading ? 'opacity-50 cursor-progress' : ''
-            } `}
+            }`}
             disabled={loading}
             type="submit"
           >
