@@ -48,21 +48,6 @@ export function RefundDetails() {
       ? 'Alimentação'
       : 'Outros'
 
-  async function handler() {
-    const response = await api.get(`/uploads/${refund.filepath}`, {
-      responseType: 'arraybuffer', // Pega os bytes reais
-    })
-
-    // Cria um Blob a partir do arraybuffer
-    const blob = new Blob([response.data], { type: 'image/png' })
-
-    // Cria uma URL temporária para o Blob
-    const blobUrl = URL.createObjectURL(blob)
-
-    // Abre a imagem em nova aba
-    window.open(blobUrl, '_blank')
-  }
-
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex  justify-center pt-6.5">
       <Container className="max-h-[30.125rem] sm:w-auto w-[24.5rem] px-6">
@@ -112,12 +97,14 @@ export function RefundDetails() {
           <div className="flex justify-center gap-2">
             <div className="flex gap-1.5">
               <img src={fileIcon} alt="File Icon" />
-              <Button
-                className="text-[#1F8459] font-semibold"
-                type="button"
-                onClick={handler}
-              >
-                Abrir comprovante
+              <Button className="text-[#1F8459] font-semibold" type="button">
+                <a
+                  href={`https://refund-api-58aj.onrender.com/uploads/${refund.filepath}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Abrir comprovante
+                </a>
               </Button>
             </div>
           </div>
