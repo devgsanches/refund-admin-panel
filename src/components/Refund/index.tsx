@@ -8,11 +8,13 @@ import { formatCurrency } from '@/utils/formatCurrency'
 export function Refund({
   category,
   name,
+  description,
   amount,
   onClick,
 }: {
   category: string
   name: string
+  description: string
   amount: number
   onClick: () => void
 }) {
@@ -63,12 +65,12 @@ export function Refund({
           <div className="flex flex-col">
             <p className="text-[#1F2523] text-sm font-bold">{name}</p>
             <span className="text-[#4D5C57] text-xs font-medium">
-              {categoryInfo?.name}
+              {description}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           <span className="text-[#4D5C57] text-xs">R$</span>
           <p className="text-[#1F2523] text-sm font-semibold">
             {formatCurrency(amount)}

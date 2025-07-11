@@ -10,21 +10,26 @@ import { useNavigate } from 'react-router'
 
 import uploadIcon from '@/assets/icons/UPLOAD.svg'
 import { Button } from '@/components/Button'
-import { useAuth } from '@/hooks/useAuth'
+
+import { api } from '@/services/api'
 
 const formSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'Nome deve conter pelo menos 3 caracteres.' }),
   category: z.string().min(1, { message: 'Categoria é obrigatória.' }),
-  value: z.coerce
-    .number({
-      message: 'Valor deve ser um número.',
-    })
-    .positive({
-      message: 'Valor deve ser positivo.',
-    })
-    .min(1, { message: 'Valor é obrigatório.' }),
+  value: z
+    .string()
+    .min(1, { message: 'Valor é obrigatório.' })
+    .refine(
+      val => {
+        const numericValue = Number(val.replace(',', '.'))
+        return !isNaN(numericValue) && numericValue > 0
+      },
+      {
+        message: 'Valor deve ser um número positivo.',
+      }
+    ),
   file: z.instanceof(File, {
     message: 'Arquivo é obrigatório.',
   }),
@@ -32,10 +37,8 @@ const formSchema = z.object({
 
 export function NewRefund() {
   const [selectedFileName, setSelectedFileName] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-
-  const data = useAuth()
-  console.log(data)
 
   const {
     register,
@@ -46,13 +49,56 @@ export function NewRefund() {
     resolver: zodResolver(formSchema),
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    if (data) {
-      navigate('/refunds/confirmed', {
-        state: {
-          fromSubmit: true,
-        },
-      })
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      let category = ''
+
+      switch (data.category) {
+        case 'Alimentação':
+          category = 'food'
+          break
+        case 'Transporte':
+          category = 'transport'
+          break
+        case 'Hospedagem':
+          category = 'accommodation'
+          break
+        case 'Serviços':
+          category = 'services'
+          break
+        default:
+          category = 'others'
+          break
+      }
+
+      // Upload file
+      const fileUploadForm = new FormData()
+      fileUploadForm.append('file', data.file)
+
+      // Upload file to server *com retorno do filename
+      const response = await api.post('/uploads', fileUploadForm)
+
+      if (data) {
+        const refund: IRefundItem = {
+          name: data.name,
+          category: category as ICategoryEnum,
+          amount: Number(data.value.replace(',', '.')),
+          filepath: response.data.filename,
+        }
+        setLoading(true)
+
+        await api.post('/refunds', refund)
+        navigate('/refunds/confirmed', {
+          state: {
+            fromSubmit: true,
+          },
+        })
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -115,7 +161,7 @@ export function NewRefund() {
                 {...register('value')}
               />
               {errors.value && (
-                <p className="text-red-500 text-xs font-semibold">
+                <p className="text-red-500 text-xs font-semibold w-[9.625rem]">
                   {errors.value.message}
                 </p>
               )}
@@ -128,7 +174,7 @@ export function NewRefund() {
               <input
                 type="file"
                 accept="image/*,.pdf,.doc,.docx"
-                onChange={(e) => {
+                onChange={e => {
                   const file = e.target.files?.[0]
                   if (file) {
                     setSelectedFileName(file.name)
@@ -153,7 +199,15 @@ export function NewRefund() {
               </p>
             )}
           </div>
-          <Button className="bg-[#1F8459] text-white">Enviar</Button>
+          <Button
+            className={`bg-[#1F8459] text-white ${
+              loading ? 'opacity-50 cursor-progress' : ''
+            }`}
+            disabled={loading}
+            type="submit"
+          >
+            Enviar
+          </Button>
         </Form>
       </Container>
     </div>

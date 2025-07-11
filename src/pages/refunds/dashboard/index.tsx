@@ -2,7 +2,7 @@ import { Container } from '@/components/Container'
 import { Pagination } from '@/components/Pagination'
 import { Refund } from '@/components/Refund'
 import { Search } from '@/components/Search'
-import type { IRefund } from '@/interfaces/refund'
+
 import { api } from '@/services/api'
 
 import { useEffect, useState } from 'react'
@@ -10,68 +10,37 @@ import { useNavigate } from 'react-router'
 
 export function Dashboard() {
   const [search, setSearch] = useState<string>('')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [perPage, setPerPage] = useState(10)
-  const [refunds, setRefunds] = useState<IRefund[]>([])
-  const [allRefunds, setAllRefunds] = useState<IRefund[]>([]) // Para busca local
-  const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+
+  const [refunds, setRefunds] = useState<IRefundResponse[]>([])
+
+  const [loading, setLoading] = useState(true)
 
   const navigate = useNavigate()
-  const token = localStorage.getItem('@token')
+
+  const PER_PAGE = 10
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const response = await api.get('/refunds', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            perPage,
-            page: currentPage,
-            search: search.trim() || undefined,
-          },
-        })
+    async function fetchRefunds() {
+      setTimeout(async () => {
+        try {
+          const response = await api.get<IRefundPaginationResponse>(
+            `/refunds?name=${search.trim()}&page=${page}&perPage=${PER_PAGE}`
+          )
 
-        const { refunds, pagination } = response.data
-
-        if (!search.trim()) {
-          setAllRefunds(refunds)
+          setRefunds(response.data.refunds)
+          setTotalPages(response.data.pagination.totalPages)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          setLoading(false)
         }
-
-        setTotalPages(pagination.totalPages)
-        setPerPage(pagination.perPage)
-        setRefunds(refunds)
-      } catch (error) {
-        console.error('Erro ao buscar reembolsos:', error)
-      } finally {
-        setLoading(false)
-      }
+      }, 500)
     }
 
-    fetchData()
-  }, [token, search, perPage, currentPage])
-
-  useEffect(() => {
-    if (search.trim() && allRefunds.length > 0) {
-      const filtered = allRefunds.filter((refund: IRefund) =>
-        refund.user.name.toLowerCase().includes(search.toLowerCase().trim())
-      )
-
-      if (refunds.length === allRefunds.length) {
-        setRefunds(filtered)
-        setTotalPages(1)
-      }
-    }
-  }, [search, allRefunds, refunds])
-
-  useEffect(() => {
-    if (search.trim()) {
-      setCurrentPage(1)
-    }
-  }, [search])
+    fetchRefunds()
+  }, [page, search])
 
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex flex-col items-center">
@@ -81,18 +50,19 @@ export function Dashboard() {
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <p className="text-[#4D5C57]">Carregando...</p>
+            <p className="text-[#4D5C57]">Só um instante..</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-4">
             {refunds.length > 0 ? (
-              refunds.map((refund: IRefund) => {
+              refunds.map((refund: IRefundResponse) => {
                 return (
                   <Refund
                     amount={Number(refund.amount)}
                     name={refund.user.name}
                     key={refund.id}
                     category={refund.category}
+                    description={refund.name}
                     onClick={() => {
                       navigate(`/dashboard/${refund.id}/details`, {
                         state: {
@@ -116,13 +86,7 @@ export function Dashboard() {
         )}
       </Container>
       <div className="flex justify-center mt-6">
-        {totalPages > 1 && !search.trim() && (
-          <Pagination
-            current={currentPage}
-            total={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        )}
+        <Pagination current={page} total={totalPages} onPageChange={setPage} />
       </div>
     </div>
   )

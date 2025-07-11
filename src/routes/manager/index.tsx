@@ -1,3 +1,5 @@
+import { Loading } from '@/components/Loading'
+import { useAuth } from '@/hooks/useAuth'
 import { Header } from '@/layouts/Header'
 import { NotFound } from '@/pages/notFound'
 import { Dashboard } from '@/pages/refunds/dashboard'
@@ -5,10 +7,14 @@ import { RefundDetails } from '@/pages/refunds/details'
 import { Routes, Route } from 'react-router'
 
 export function ManagerRoutes() {
-  const user = JSON.parse(localStorage.getItem('@user') || '{}')
+  const { session } = useAuth()
 
-  const name = user.name.split(' ')[0]
-  const role = user.role
+  if (!session) {
+    return <Loading />
+  }
+  const name = session.user.name.split(' ')[0]
+  const role = session.user.role
+
   return (
     <Routes>
       <Route element={<Header user={{ name, role }} />}>

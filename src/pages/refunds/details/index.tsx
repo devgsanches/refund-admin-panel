@@ -5,50 +5,33 @@ import { Input } from '@/components/Input'
 import { Select } from '@/components/Select'
 
 import fileIcon from '@/assets/icons/file.svg'
-import { Navigate, useLocation, useParams, useNavigate } from 'react-router'
+import { Navigate, useLocation, useParams } from 'react-router'
 import { api } from '@/services/api'
 import { useEffect, useState } from 'react'
-import type { IRefund } from '@/interfaces/refund'
 
 export function RefundDetails() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { id } = useParams()
 
-  const [refund, setRefund] = useState<IRefund>({
+  const [refund, setRefund] = useState<IRefundItem>({
     id: '',
     name: '',
-    amount: '0',
-    category: '',
-    createdAt: '',
-    updatedAt: '',
-    filePath: '',
-    user: {
-      name: '',
-    },
-    userId: '',
+    amount: 0,
+    category: 'accommodation' as ICategoryEnum,
+    filepath: '',
   })
 
-  const token = localStorage.getItem('@token')
-
   useEffect(() => {
-    const fetchData = async () => {
-      const db = await api.get('/refunds', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    const fetchRefunds = async () => {
+      const response = await api.get(`/refunds/${id}`)
 
-      const { refunds } = db.data
-      const foundRefund = refunds.find((refund: IRefund) => refund.id === id)
+      const refund = response.data
 
-      if (foundRefund) {
-        setRefund(foundRefund)
-      }
+      setRefund(refund)
     }
 
-    fetchData()
-  }, [id, token])
+    fetchRefunds()
+  }, [id])
 
   if (!location.state?.fromDetails) {
     return <Navigate to="/dashboard" />
@@ -64,6 +47,21 @@ export function RefundDetails() {
       : refund?.category === 'food'
       ? 'Alimentação'
       : 'Outros'
+
+  async function handler() {
+    const response = await api.get(`/uploads/${refund.filepath}`, {
+      responseType: 'arraybuffer', // Pega os bytes reais
+    })
+
+    // Cria um Blob a partir do arraybuffer
+    const blob = new Blob([response.data], { type: 'image/png' })
+
+    // Cria uma URL temporária para o Blob
+    const blobUrl = URL.createObjectURL(blob)
+
+    // Abre a imagem em nova aba
+    window.open(blobUrl, '_blank')
+  }
 
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex  justify-center pt-6.5">
@@ -113,7 +111,11 @@ export function RefundDetails() {
           <div className="flex justify-center gap-2">
             <div className="flex gap-1.5">
               <img src={fileIcon} alt="File Icon" />
-              <Button className="text-[#1F8459] font-semibold" type="button">
+              <Button
+                className="text-[#1F8459] font-semibold"
+                type="button"
+                onClick={handler}
+              >
                 Abrir comprovante
               </Button>
             </div>
@@ -122,7 +124,7 @@ export function RefundDetails() {
           <Button
             className="bg-[#1F8459] text-white transition-all duration-300 hover:bg-[#1F8459]/90"
             onClick={() => {
-              navigate('/dashboard')
+              window.location.href = '/dashboard'
             }}
           >
             Voltar

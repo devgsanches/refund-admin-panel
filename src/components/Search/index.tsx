@@ -9,9 +9,6 @@ interface SearchProps {
 export function Search({ search, setSearch }: SearchProps) {
   const [isFocused, setIsFocused] = useState(false)
 
-  const handleClearSearch = () => {
-    setSearch('')
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,9 +40,7 @@ export function Search({ search, setSearch }: SearchProps) {
         <button
           type="button"
           className="w-[3rem] h-[3rem] bg-[#1F8459] flex items-center justify-center rounded-lg cursor-pointer hover:bg-[#1F8459]/90 transition-colors"
-          onClick={
-            search.trim() ? handleClearSearch : () => setSearch(search.trim())
-          }
+          onClick={handleSubmit}
           title={search.trim() ? 'Limpar busca' : 'Buscar'}
         >
           <img src={searchIcon} alt="Buscar" />

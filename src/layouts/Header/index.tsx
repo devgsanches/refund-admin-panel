@@ -1,6 +1,6 @@
 import logo from '@/assets/logo.svg'
 import signOutIcon from '@/assets/icons/signOut.svg'
-import { Outlet, useNavigate } from 'react-router'
+import { Outlet } from 'react-router'
 
 import hiIcon from '@/assets/icons/hi.svg'
 import { useState } from 'react'
@@ -15,15 +15,12 @@ export function Header({
     role: string
   }
 }) {
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [loading] = useState<boolean>(false)
+
   const { signOut } = useAuth()
 
   function handleSignOut() {
-    setLoading(true)
     signOut()
-    navigate('/auth/login')
-    setLoading(false)
   }
 
   return (
