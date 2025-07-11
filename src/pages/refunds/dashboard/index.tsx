@@ -44,7 +44,7 @@ export function Dashboard() {
 
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex flex-col items-center">
-      <Container className="max-h-[36rem] h-auto overflow-y-auto mt-10">
+      <Container className="sm:max-h-[36rem] h-auto w-[24.5rem] sm:w-auto mt-10 overflow-y-auto">
         <h1 className="font-bold text-xl">Solicitações</h1>
         <Search search={search} setSearch={setSearch} />
 
@@ -85,7 +85,7 @@ export function Dashboard() {
           </ul>
         )}
       </Container>
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center sm:mt-6 mt-4 pb-4">
         <Pagination current={page} total={totalPages} onPageChange={setPage} />
       </div>
     </div>

@@ -65,7 +65,7 @@ export function RefundDetails() {
 
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex  justify-center pt-6.5">
-      <Container className="max-h-[30.125rem]">
+      <Container className="max-h-[30.125rem] sm:w-auto w-[24.5rem] px-6">
         <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-[#1F2523] text-xl font-bold">
             Solicitação de reembolso
@@ -80,11 +80,11 @@ export function RefundDetails() {
             type="text"
             name="name"
             id="name"
-            className="w-[27rem]"
+            className="sm:w-[27rem] w-[20.5rem]"
             disabled
             value={refund?.name}
           />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center sm:gap-4 gap-2">
             <Select
               label="Categoria"
               options={[
@@ -96,12 +96,13 @@ export function RefundDetails() {
               ]}
               disabled
               value={categoryTranslate}
+              className="sm:w-[18rem] w-[14rem] border border-[#CDD5D2] rounded-lg px-2 py-2.5"
             />
             <Input
               label="Valor"
               type="number"
               name="value"
-              className="w-[9.625rem] px-4"
+              className="sm:w-[8rem] w-[6rem] px-4"
               placeholder="0,00"
               disabled
               value={Number(refund?.amount).toFixed(2)}

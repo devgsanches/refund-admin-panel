@@ -28,9 +28,9 @@ export function Header({
       {loading && <Loading />}
       {!loading && (
         <>
-          <header className="w-screen px-[5.625rem] py-[2.375rem] flex justify-between items-center bg-[#E8ECE9] border-b border-[#C3C3C3]">
+          <header className="w-screen px-[2rem] sm:px-[5.625rem] py-[2.375rem] flex justify-between items-center bg-[#E8ECE9] border-b border-[#C3C3C3]">
             <img src={logo} alt="Refund Logo" />
-            <div className="flex gap-80 items-center justify-center">
+            <div className="flex sm:gap-80 gap-6 items-center justify-center">
               <div className="flex flex-col">
                 <p className="text-[#4D5C57] text-sm font-semibold flex items-center gap-2">
                   Olá,

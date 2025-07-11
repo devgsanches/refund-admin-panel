@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
-import uploadIcon from '@/assets/icons/UPLOAD.svg'
+import uploadIcon from '@/assets/icons/upload.svg'
 import { Button } from '@/components/Button'
 
 import { api } from '@/services/api'
@@ -109,7 +109,7 @@ export function NewRefund() {
           errors.category || errors.file || errors.value || errors.name
             ? 'max-h-[35rem]'
             : 'max-h-[31.5rem]'
-        }`}
+        } sm:w-auto w-[23.5rem] px-6`}
       >
         <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-[#1F2523] text-xl font-bold">
@@ -124,7 +124,7 @@ export function NewRefund() {
             <Input
               label="NOME DA SOLICITAÇÃO"
               type="text"
-              className="w-[27rem]"
+              className="sm:w-[27rem] w-[20.5rem]"
               {...register('name')}
             />
             {errors.name && (
@@ -133,7 +133,7 @@ export function NewRefund() {
               </p>
             )}
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center sm:gap-4 gap-1.5">
             <div className="flex flex-col gap-1.5">
               <Select
                 label="Categoria"
@@ -152,16 +152,16 @@ export function NewRefund() {
                 </p>
               )}
             </div>
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col sm:gap-1.5 gap-0">
               <Input
                 label="Valor"
                 type="text"
-                className="w-[9.625rem] px-4"
+                className="sm:w-[9.625rem] w-[4rem] sm:px-4"
                 placeholder="0,00"
                 {...register('value')}
               />
               {errors.value && (
-                <p className="text-red-500 text-xs font-semibold w-[9.625rem]">
+                <p className="text-red-500 text-xs font-semibold sm:w-[9.625rem] w-[2rem]">
                   {errors.value.message}
                 </p>
               )}
@@ -184,7 +184,7 @@ export function NewRefund() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
 
-              <div className="h-[3rem] rounded-lg border border-[#CDD5D2] pl-2.5 flex items-center justify-between bg-white">
+              <div className="h-[3rem] rounded-lg border border-[#CDD5D2] pl-2.5 flex items-center justify-between bg-white sm:w-[27rem] w-[20.5rem]">
                 <span className="text-sm text-[#4D5C57] font-medium">
                   {selectedFileName || 'Selecionar arquivo'}
                 </span>
@@ -200,9 +200,9 @@ export function NewRefund() {
             )}
           </div>
           <Button
-            className={`bg-[#1F8459] text-white ${
+            className={`w-full bg-[#1F8459] text-white ${
               loading ? 'opacity-50 cursor-progress' : ''
-            }`}
+            } `}
             disabled={loading}
             type="submit"
           >

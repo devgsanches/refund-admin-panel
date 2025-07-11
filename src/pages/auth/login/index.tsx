@@ -66,17 +66,17 @@ export function SignIn() {
     <div className="bg-[#E4ECE9] h-screen w-screen flex items-center justify-center">
       {loading && <Loading />}
       {!loading && (
-        <Container className="flex flex-col items-center">
+        <Container className="flex flex-col items-center sm:w-auto w-[23.5rem]">
           <Logo className="pb-8" />
           <Form
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-8 sm:gap-4 justify-center w-full"
             onSubmit={handleSubmit(onSubmit)}
           >
             <Input
               label="E-MAIL"
               type="email"
               placeholder="Digite seu e-mail"
-              className="w-[24.875rem]"
+              className="sm:w-[24.875rem] max-w-[20rem]"
               {...register('email')}
             />
             {errors.email && (
@@ -89,7 +89,7 @@ export function SignIn() {
               type="password"
               {...register('password')}
               placeholder="Digite sua senha"
-              className="w-[24.875rem]"
+              className="sm:w-[24.875rem] max-w-[20rem]"
             />
             {errors.password && (
               <p className="text-red-500 text-xs font-semibold">

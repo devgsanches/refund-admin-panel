@@ -14,7 +14,7 @@ export function ConfirmedRefund() {
 
   return (
     <div className="bg-[#E4ECE9] h-[calc(100vh-7.3125rem)] flex  justify-center pt-6.5">
-      <Container className="max-h-[24.25rem]">
+      <Container className="max-h-[24.25rem] sm:w-auto w-[24.5rem]">
         <div className="flex items-center flex-col gap-6">
           <h1 className="text-[#1F8459] text-2xl font-bold">
             Solicitação enviada!

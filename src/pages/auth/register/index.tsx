@@ -73,15 +73,18 @@ export function SignUp() {
 
   return (
     <div className="bg-[#E4ECE9] h-screen w-screen flex items-center justify-center">
-      <Container className="flex flex-col items-center">
+      <Container className="flex flex-col items-center sm:w-auto w-[23.5rem]">
         <Logo className="pb-8" />
-        <Form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <Form
+          className="flex flex-col items-center gap-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Input
             label="NOME"
             type="text"
             {...register('name')}
             placeholder="Digite seu nome"
-            className="w-[24.875rem]"
+            className="sm:w-[24.875rem] w-[20rem]"
           />
           {errors.name && (
             <p className="text-red-500 text-xs font-semibold">
@@ -93,7 +96,7 @@ export function SignUp() {
             type="email"
             {...register('email')}
             placeholder="Digite seu e-mail"
-            className="w-[24.875rem]"
+            className="sm:w-[24.875rem] w-[20rem]"
           />
           {errors.email && (
             <p className="text-red-500 text-xs font-semibold">
@@ -105,7 +108,7 @@ export function SignUp() {
             type="password"
             {...register('password')}
             placeholder="Digite sua senha"
-            className="w-[24.875rem]"
+            className="sm:w-[24.875rem] w-[20rem]"
           />
           {errors.password && (
             <p className="text-red-500 text-xs font-semibold">
@@ -117,7 +120,7 @@ export function SignUp() {
             type="password"
             {...register('confirmPassword')}
             placeholder="Confirme sua senha"
-            className="w-[24.875rem]"
+            className="sm:w-[24.875rem] w-[20rem]"
           />
           {errors.confirmPassword && (
             <p className="text-red-500 text-xs font-semibold">

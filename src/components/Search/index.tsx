@@ -9,7 +9,6 @@ interface SearchProps {
 export function Search({ search, setSearch }: SearchProps) {
   const [isFocused, setIsFocused] = useState(false)
 
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setSearch(search.trim())
@@ -26,7 +25,7 @@ export function Search({ search, setSearch }: SearchProps) {
           id="search"
           name="search"
           autoComplete="off"
-          className={`rounded-lg w-[58.125rem] px-4 h-12 border ${
+          className={`rounded-lg sm:w-[58.125rem] w-[20.5rem] px-4 h-12 border ${
             isFocused
               ? 'border-[#1F8459] ring-1 ring-[#1F8459]'
               : 'border-[#E4ECE9]'
