@@ -103,7 +103,7 @@ export function NewRefund() {
   }
 
   return (
-    <div className="bg-[#E4ECE9] h-screen sm:h-[calc(100vh-7.3125rem)] flex justify-center pt-8.5">
+    <div className="bg-[#E4ECE9] h-screen w-screen sm:h-[calc(100vh-7.3125rem)] flex justify-center pt-8.5">
       <Container
         className={`${
           errors.category || errors.file || errors.value || errors.name
