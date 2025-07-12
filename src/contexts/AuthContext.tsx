@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 
+// type
 type AuthContext = {
   session: null | UserAPIResponse
   save: (data: UserAPIResponse) => void
